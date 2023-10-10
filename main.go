@@ -1,15 +1,19 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
-	// Vraag de gebruiker voor een kleur
-	fmt.Print("Wat is jouw lievelingskleur? ")
-	var favoriteColor string
-	fmt.Scanln(&favoriteColor)
+	// flag voor de kleur
+	var colorPtr string
+	flag.StringVar(&colorPtr, "kleur", "", "Kleur (rood, blauw, groen, geel, oranje, roze.)")
+	flag.Parse()
+	colorPtr = strings.ToLower(colorPtr)
+	//Kleur is nu leeg dit moet nog aangepast worden. if string is empty geef error.
 
 	// Geef kleuren aan voor verschillende kleuren
 	// map[string]string{ dit is de aanduiding van een map. Het geeft aan dat gedichten een map is waarvan de sleutels en waarden beide sting zijn.
@@ -20,28 +24,31 @@ func main() {
 		"geel":   "Geel als de stralen van de zon.",
 		"oranje": "Oranje de kleur van de zon",
 		"roze":   "Roze is de kleur van een verse vrucht",
+		"paars":  "Paars is de kleur van luxe.",
 	}
 
 	// Controlleer of de kleur in de lijst voorkomt
-	gedicht, found := gedichten[favoriteColor]
-	if !found {
-		fmt.Println("Sorry, we hebben geen gedicht voor die kleur.")
+	gekozenKleur, exists := gedichten[colorPtr]
+	if !exists {
+		fmt.Println("Geen geldige kleur. Kies uit rood, blauw, groen, geel, oranje, roze, paars.")
 		return
 	}
 
 	// Open een text bestand om het gedicht naartoe te zenden
-	file, err := os.Create("gedicht.txt")
+	fileName := "gedicht.txt"
+	file, err := os.Create(fileName)
 	if err != nil {
 		fmt.Println("Fout bij het maken van het tekstbestand:", err)
 		return
 	}
+	defer file.Close()
 
 	// Schrijf het gedicht naar het text file
-	_, err = file.WriteString(gedicht)
+	_, err = file.WriteString(gekozenKleur)
 	if err != nil {
 		fmt.Println("Fout bij het schrijven naar het tekstbestand:", err)
 		return
 	}
 
-	fmt.Println("Gedicht is geschreven naar gedicht.txt!")
+	fmt.Printf("Gedicht is opgeslagen in %s op basis van jouw opgegeven kleur %s. \n", fileName, colorPtr)
 }
