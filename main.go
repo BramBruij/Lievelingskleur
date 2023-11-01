@@ -15,7 +15,7 @@ func main() {
 	colorPtr = strings.ToLower(colorPtr)
 	//Kleur is nu leeg dit moet nog aangepast worden. if string is empty geef error.
 
-	// Geef kleuren aan voor verschillende kleuren
+	// Geef kleuren aan voor verschillende gedichten
 	// map[string]string{ dit is de aanduiding van een map. Het geeft aan dat gedichten een map is waarvan de sleutels en waarden beide sting zijn.
 	gedichten := map[string]string{
 		"rood":   "Rood met passie.",
