@@ -7,16 +7,36 @@ import (
 	"strings"
 )
 
-func main() {
+var colorPtr string
+
+var validColors = map[string]struct{}{
+	"rood":   {},
+	"blauw":  {},
+	"groen":  {},
+	"geel":   {},
+	"oranje": {},
+	"roze":   {},
+	"paars":  {},
+}
+
+//Wanneer een kleur wordt opgegeven via de vlag -kleur in de init functie en in de main functie, wordt de opgegeven kleur gecontrolleerd tegen deze map van geldige kleuren.
+
+func init() {
 	// flag voor de kleur
-	var colorPtr string
-	flag.StringVar(&colorPtr, "kleur", "", "Kleur (rood, blauw, groen, geel, oranje, roze.)")
+	flag.StringVar(&colorPtr, "kleur", "", "Kleur (rood, blauw, groen, geel, oranje, roze, paars).")
 	flag.Parse()
 	colorPtr = strings.ToLower(colorPtr)
-	//Kleur is nu leeg dit moet nog aangepast worden. if string is empty geef error.
+
+	if _, isValid := validColors[colorPtr]; !isValid {
+		fmt.Println("Geen geldige kleur. Kies uit rood, blauw, groen, geel, oranje, roze, paars.")
+		os.Exit(1) // Stop het programma bij een ongeldige kleur
+	}
+}
+
+func main() {
 
 	// Geef kleuren aan voor verschillende gedichten
-	// map[string]string{ dit is de aanduiding van een map. Het geeft aan dat gedichten een map is waarvan de sleutels en waarden beide sting zijn.
+	// map[string]string{ dit is de aanduiding van een map. Het geeft aan dat gedichten een map is waarvan de sleutels en waarden beide string zijn.
 	gedichten := map[string]string{
 		"rood":   "Rood met passie.",
 		"blauw":  "Blauw zoals de lucht.",
@@ -27,7 +47,7 @@ func main() {
 		"paars":  "Paars is de kleur van luxe.",
 	}
 
-	// Controlleer of de kleur in de lijst voorkomt
+	// Selecteer het gedicht op basis van de opgegeven kleur
 	gekozenKleur, exists := gedichten[colorPtr]
 	if !exists {
 		fmt.Println("Geen geldige kleur. Kies uit rood, blauw, groen, geel, oranje, roze, paars.")
